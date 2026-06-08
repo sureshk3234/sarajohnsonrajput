@@ -91,9 +91,9 @@ function Field({ label, name, type = "text", placeholder, textarea }: { label: s
 
 function Select({ label, name, options }: { label: string; name: string; options: string[] }) {
   return (
-    <label className="block">
+    <label className="block" suppressHydrationWarning>
       <span className="block text-xs uppercase tracking-widest text-muted-foreground mb-2">{label}</span>
-      <select required name={name} className="w-full bg-background/40 border border-border rounded-2xl px-4 py-3 focus:outline-none focus:border-blush transition-colors">
+      <select required name={name} suppressHydrationWarning className="w-full bg-background/40 border border-border rounded-2xl px-4 py-3 focus:outline-none focus:border-blush transition-colors">
         <option value="">Select…</option>
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
       </select>
