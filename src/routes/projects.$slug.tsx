@@ -44,7 +44,7 @@ function CaseStudy() {
           <p className="mt-6 text-xl text-muted-foreground max-w-3xl">{project.tagline}</p>
 
           <div className="mt-8 flex flex-wrap gap-2">
-            {project.deliverables.map((d) => (
+            {project.deliverables.map((d: string) => (
               <span key={d} className="glass rounded-full px-4 py-1.5 text-sm">{d}</span>
             ))}
           </div>
@@ -91,7 +91,7 @@ function CaseStudy() {
         <div className="mt-24">
           <h2 className="font-display text-3xl mb-8">Results</h2>
           <div className="grid md:grid-cols-3 gap-5">
-            {project.results.map((r) => (
+            {project.results.map((r: { label: string; value: string }) => (
               <div key={r.label} className="glass rounded-3xl p-8">
                 <div className="font-display text-5xl text-gradient">{r.value}</div>
                 <div className="mt-2 text-sm uppercase tracking-widest text-muted-foreground">{r.label}</div>
