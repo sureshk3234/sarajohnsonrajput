@@ -1,0 +1,12 @@
+.git
+node_modules
+.lovable
+.vscode
+.idea
+*.log
+.DS_Store
+.env.local
+.env.*.local
+.cache
+tmp
+temp
