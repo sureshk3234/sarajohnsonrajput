@@ -104,10 +104,11 @@
 }
 
 @utility text-gradient {
-  background: linear-gradient(135deg, var(--blush), var(--rose) 50%, var(--lavender));
+  background: linear-gradient(110deg, oklch(0.95 0.09 15), oklch(0.85 0.17 5) 45%, oklch(0.82 0.15 320));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 0 30px color-mix(in oklab, var(--rose) 25%, transparent);
 }
 
 @utility aurora-bg {
