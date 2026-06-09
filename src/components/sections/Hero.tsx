@@ -30,10 +30,10 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2 + c.delay, duration: 0.8 }}
-          className="hidden lg:block absolute glass rounded-2xl px-5 py-3 text-sm font-medium animate-float"
+          className="hidden lg:block absolute glass-strong rounded-2xl px-5 py-3 text-sm font-medium animate-float text-blush"
           style={{ left: c.x, top: c.y, animationDelay: `${c.delay}s` }}
         >
-          <span className="text-gradient">{c.label}</span>
+          <span>{c.label}</span>
         </motion.div>
       ))}
 
@@ -67,7 +67,7 @@ export function Hero() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -30, opacity: 0 }}
               transition={{ duration: 0.45 }}
-              className="text-gradient italic"
+              className="italic text-blush"
             >
               {titles[i]}
             </motion.span>
