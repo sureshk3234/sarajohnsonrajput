@@ -4,9 +4,6 @@
   "outputDirectory": "dist/client",
   "installCommand": "bun install",
   "framework": null,
-  "rewrites": [
-    { "source": "/((?!assets/).*)", "destination": "/" }
-  ],
   "trailingSlash": false,
   "headers": [
     {
