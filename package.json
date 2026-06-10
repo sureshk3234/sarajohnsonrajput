@@ -3,7 +3,6 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
-  "packageManager": "bun@1.2.17",
   "engines": {
     "node": ">=22.0.0"
   },
@@ -11,7 +10,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:vercel": "vite build && node scripts/prerender.mjs",
-    "vercel-build": "bun run build:vercel",
+    "vercel-build": "npm run build:vercel",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write ."
