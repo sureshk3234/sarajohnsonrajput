@@ -1,17 +1,24 @@
 #!/usr/bin/env node
 /**
  * Prerender script for Vercel static deployment.
- * Imports the built Nitro server and generates static HTML for all routes.
+ * Imports the built SSR server and generates static HTML for all routes.
  */
 
-import { mkdir, writeFile, rm } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { access, mkdir, writeFile } from "node:fs/promises";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, "..");
 const distClientDir = join(rootDir, "dist", "client");
-const serverPath = join(rootDir, "dist", "server", "index.mjs");
+
+const serverCandidates = [
+  join(rootDir, "dist", "server", "index.mjs"),
+  join(rootDir, "dist", "server", "_ssr", "index.mjs"),
+  join(rootDir, ".output", "server", "index.mjs"),
+  join(rootDir, ".vercel", "output", "functions", "__nitro.func", "index.mjs"),
+  join(rootDir, "node_modules", ".nitro", "vite", "services", "ssr", "index.js"),
+];
 
 const routes = [
   "/",
@@ -36,9 +43,32 @@ const routes = [
   "/blog/collaboration",
 ];
 
+async function findServerPath() {
+  for (const candidate of serverCandidates) {
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // try next candidate
+    }
+  }
+
+  throw new Error(
+    `Could not find a built SSR entry. Checked:\n${serverCandidates
+      .map((candidate) => `- ${relative(rootDir, candidate)}`)
+      .join("\n")}`,
+  );
+}
+
 async function prerender() {
-  console.log("Loading server module...");
-  const server = await import(serverPath);
+  const serverPath = await findServerPath();
+  console.log(`Loading server module from ${relative(rootDir, serverPath)}...`);
+  const serverModule = await import(pathToFileURL(serverPath).href);
+  const server = serverModule.default ?? serverModule;
+
+  if (typeof server.fetch !== "function") {
+    throw new Error(`SSR entry at ${relative(rootDir, serverPath)} does not export a fetch handler.`);
+  }
 
   const mockEnv = {};
   const mockContext = { waitUntil: () => {} };
@@ -48,7 +78,7 @@ async function prerender() {
     const request = new Request(url);
 
     try {
-      const response = await server.default.fetch(request, mockEnv, mockContext);
+      const response = await server.fetch(request, mockEnv, mockContext);
       const html = await response.text();
 
       // Route " / "  →  dist/client/index.html
@@ -63,7 +93,8 @@ async function prerender() {
 
       console.log(`✓ ${route}  →  ${filePath.replace(rootDir + "/", "")}`);
     } catch (err) {
-      console.error(`✗ ${route}:`, err.message);
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`✗ ${route}:`, message);
       process.exitCode = 1;
     }
   }
