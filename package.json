@@ -4,12 +4,12 @@
   "sideEffects": false,
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "build:vercel": "vite build && node scripts/prerender.mjs",
+    "build:vercel": "NITRO_PRESET=cloudflare-module vite build && node scripts/prerender.mjs",
     "vercel-build": "npm run build:vercel",
     "preview": "vite preview",
     "lint": "eslint .",
