@@ -78,7 +78,7 @@ async function prerender() {
     const request = new Request(url);
 
     try {
-      const response = await server.default.fetch(request, mockEnv, mockContext);
+      const response = await server.fetch(request, mockEnv, mockContext);
       const html = await response.text();
 
       // Route " / "  →  dist/client/index.html
@@ -93,7 +93,8 @@ async function prerender() {
 
       console.log(`✓ ${route}  →  ${filePath.replace(rootDir + "/", "")}`);
     } catch (err) {
-      console.error(`✗ ${route}:`, err.message);
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`✗ ${route}:`, message);
       process.exitCode = 1;
     }
   }
